@@ -1,16 +1,15 @@
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import Input
 import time
 import matplotlib.pyplot as plt
 
 from ae import ae
 
-@tf.function(jit_compile=True)
+# @tf.function()
 def train(model, x, optimizer):
     with tf.GradientTape() as tape:
         y_pred = model(x)
-        loss   = model.loss(y_pred, x)[0]
+        loss   = model.Loss(y_pred, x)[0]
 
     gradients = tape.gradient(loss, model.trainable_variables)
     optimizer.apply_gradients(zip(gradients, model.trainable_variables))
@@ -70,7 +69,7 @@ def main():
 
         if i%1 == 0:
 
-            model.save_weights(address + "/model_"+str(i))
+            model.save_weights(address + "/model_"+str(i)+".weights.h5")
 
             train_loss = loss.numpy()
 

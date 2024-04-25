@@ -7,16 +7,7 @@
 
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import Sequential, Model, Input
-from tensorflow.keras.layers import Reshape, Conv2D, PReLU, Flatten, Dense, Activation, MaxPooling2D, BatchNormalization
-from tensorflow.keras.losses import MeanSquaredError
-
-
-import matplotlib
-import matplotlib.pyplot as plt
-import time
-
-import os
+from tensorflow.keras.layers import Conv2D, Flatten, Dense, Activation, BatchNormalization
 
 class DeepONet_Model(tf.keras.Model):
 
@@ -82,7 +73,7 @@ class DeepONet_Model(tf.keras.Model):
 
         return ls
 
-    @tf.function(jit_compile=True)
+    # @tf.function(jit_compile=True)
     def call(self, X_func, X_loc):
     #X_func -> [BS*n_t, k*n_f]
     #X_loc  -> [n_t, 1]
@@ -108,8 +99,8 @@ class DeepONet_Model(tf.keras.Model):
 
         return(Y)
 
-    @tf.function(jit_compile=True)
-    def loss(self, y_pred, y_train):
+    # @tf.function(jit_compile=True)
+    def Loss(self, y_pred, y_train):
 
         # mse = MeanSquaredError()
 
@@ -121,24 +112,24 @@ class DeepONet_Model(tf.keras.Model):
 
         return([train_loss])
 
-    def predict(self, X_func, X_loc, n_steps):
-    #X_func -> [1,5*100]
-    #X_loc  -> [1,1]
+    # def predict(self, X_func, X_loc, n_steps):
+    # #X_func -> [1,5*100]
+    # #X_loc  -> [1,1]
 
-        X_func_ls = [X_func]
-        X_loc_ls = [X_loc[0]]
+    #     X_func_ls = [X_func]
+    #     X_loc_ls = [X_loc[0]]
 
-        for i in range(n_steps):
-            y = self.call(X_func, X_loc ) #y -> [1,100 ]
-            X_func = np.reshape(X_func, (1,5,-1))
-            X_func = np.array([np.append(X_func[0], y, axis=0 )[1:]])
-            X_func = np.reshape(X_func, (1,-1))
-            X_loc = X_loc + 1
+    #     for i in range(n_steps):
+    #         y = self.call(X_func, X_loc ) #y -> [1,100 ]
+    #         X_func = np.reshape(X_func, (1,5,-1))
+    #         X_func = np.array([np.append(X_func[0], y, axis=0 )[1:]])
+    #         X_func = np.reshape(X_func, (1,-1))
+    #         X_loc = X_loc + 1
 
-            X_func_ls.append(X_func)
-            X_loc_ls.append(X_loc[0])
+    #         X_func_ls.append(X_func)
+    #         X_loc_ls.append(X_loc[0])
 
-        X_func_ls = np.concatenate(X_func_ls, axis=0)
-        X_loc_ls  = np.concatenate(X_loc_ls,  axis=0)
+    #     X_func_ls = np.concatenate(X_func_ls, axis=0)
+    #     X_loc_ls  = np.concatenate(X_loc_ls,  axis=0)
 
-        return X_func_ls, X_loc_ls
+    #     return X_func_ls, X_loc_ls
