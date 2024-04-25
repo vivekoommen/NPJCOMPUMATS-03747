@@ -2,8 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import time
-from sklearn.preprocessing import StandardScaler
-from scipy.interpolate import interp1d
 from ae import ae
 
 import matplotlib
@@ -33,11 +31,11 @@ def tensor(x):
     return tf.convert_to_tensor(x, dtype=tf.float32)
 
 
-@tf.function(jit_compile=True)
+# @tf.function(jit_compile=True)
 def train(don_model, X_func, X_loc, y):
     with tf.GradientTape() as tape:
         y_hat  = don_model(X_func, X_loc)
-        loss   = don_model.loss(y_hat, y)[0]
+        loss   = don_model.Loss(y_hat, y)[0]
 
     gradients = tape.gradient(loss, don_model.trainable_variables)
     don_model.optimizer.apply_gradients(zip(gradients, don_model.trainable_variables))
@@ -106,7 +104,7 @@ def main():
 
         if i%1 == 0:
 
-            don_model.save_weights(Par['address'] + "/model_"+str(i))
+            don_model.save_weights(Par['address'] + "/model_"+str(i) +".weights.h5")
 
             train_loss = loss.numpy()
 
@@ -143,14 +141,14 @@ def main():
     if True:
         ae_model = ae()
         ae_model_number = np.load('saved_models/ae_models/best_ae_model_number.npy')
-        ae_model_address = "saved_models/ae_models/model_"+str(ae_model_number)
+        ae_model_address = "saved_models/ae_models/model_"+str(ae_model_number)+".weights.h5"
         ae_model.load_weights(ae_model_address)
 
 
         don_model = DeepONet_Model(Par)
         don_model_number = index_list[np.argmin(val_loss_list)]
         np.save('data/best_don_model_number', don_model_number)
-        don_model_address = Par['address'] + "/model_"+str(don_model_number)
+        don_model_address = Par['address'] + "/model_"+str(don_model_number)+".weights.h5"
         don_model.load_weights(don_model_address)
 
         print('best DeepONet model: ', don_model_number)

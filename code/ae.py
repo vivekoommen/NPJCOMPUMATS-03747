@@ -7,15 +7,9 @@
 
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import Sequential, Model, Input
-from tensorflow.keras.layers import Input, Reshape, Conv2D, Conv2DTranspose, MaxPooling2D, UpSampling2D,  PReLU, Flatten, Dense, Activation
-from tensorflow.keras.losses import MeanSquaredError
+from tensorflow.keras.layers import Reshape, Conv2D, Conv2DTranspose, MaxPooling2D, Flatten, Dense
 
-import matplotlib
 import matplotlib.pyplot as plt
-import time
-
-import os
 
 class ae(tf.keras.Model):
 
@@ -69,7 +63,7 @@ class ae(tf.keras.Model):
 
         return ls
 
-    @tf.function(jit_compile=True)
+    # @tf.function(jit_compile=True)
     def call(self, x):
         y=x
         for i in range(len(self.encoder_ls)):
@@ -80,8 +74,8 @@ class ae(tf.keras.Model):
 
         return y
 
-    @tf.function(jit_compile=True)
-    def loss(self, y_pred, y_train):
+    # @tf.function(jit_compile=True)
+    def Loss(self, y_pred, y_train):
 
         #-------------------------------------------------------------#
         #Total Loss
@@ -90,7 +84,7 @@ class ae(tf.keras.Model):
 
         return([train_loss])
 
-    @tf.function(jit_compile=True)
+    # @tf.function(jit_compile=True)
     def encode(self, x):
     #x - [batch_size*nt, 128, 128, 1]
     #y - [batch_size*nt, latent_dim]

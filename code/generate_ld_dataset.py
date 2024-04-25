@@ -1,10 +1,8 @@
 import numpy as np
 
-from mpl_toolkits import mplot3d
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import tensorflow as tf
 
-import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 from ae import ae
@@ -70,7 +68,7 @@ def main():
     #Loading model
     model = ae()
     model_number = np.load(address+'/best_ae_model_number.npy')
-    model_address = address + "/model_"+str(model_number)
+    model_address = address + "/model_"+str(model_number)+".weights.h5"
     model.load_weights(model_address)
 
     batch_size=1
